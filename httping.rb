@@ -12,6 +12,26 @@ module Enumerable
   end
 end
 
+class Float
+  def to_friendly_time
+    case self
+      when 0..1 then "#{(self * 1000).floor} msecs"
+      when 1..2 then "1 sec"
+      else "#{self.floor} secs"
+    end
+  end
+end
+
+class Fixnum
+  def to_friendly_size
+    case self
+      when 0..1024 then "#{self} bytes"
+      when 1024..1048576 then "#{self / 1024} kb"
+      when 1048576..1073741824 then "#{self / 1048576} mb"
+    end
+  end
+end
+
 class HTTPing
   include Net
   include URI
@@ -40,33 +60,15 @@ class HTTPing
     request = Net::HTTP.new(@uri.host, @uri.port)
     start_time = Time.now
     response, data = request.get("#{@uri.path}?#{@uri.query}")
-    difference = Time.now - start_time
-    @ping_results << difference
-
-    puts "#{friendly_size(data.length)} from #{@uri}: code=#{response.code} msg=#{response.message} time=#{friendly_response_time(difference)}"
+    @ping_results << difference = Time.now - start_time
+    puts "#{data.length.to_friendly_size} from #{@uri}: code=#{response.code} msg=#{response.message} time=#{difference.to_friendly_time}"
   end
   
   def on_exit
     puts "\n\n--- #{@uri} httping statistics ---"
     puts "#{@ping_results.size} GETs transmitted"
-    puts "round-trip min/avg/max = #{friendly_response_time(@ping_results.min)}/#{friendly_response_time(@ping_results.mean)}/#{friendly_response_time(@ping_results.max)}"
+    puts "round-trip min/avg/max = #{@ping_results.min.to_friendly_time}/#{@ping_results.mean.to_friendly_time}/#{@ping_results.max.to_friendly_time}"
     exit
-  end
-
-  def friendly_response_time(seconds)
-    case seconds
-      when 0..1 then "#{(seconds * 1000).floor} msecs"
-      when 1..2 then "1 sec"
-      else "#{seconds.floor} secs"
-    end
-  end
-
-  def friendly_size(size)
-    case size
-      when 0..1024 then "#{size} bytes"
-      when 1024..1048576 then "#{size / 1024} kb"
-      when 1048576..1073741824 then "#{size / 1048576} mb"
-    end
   end
 end
 
