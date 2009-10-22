@@ -52,13 +52,12 @@ class HTTPing
   end
 
   def run
-    @pings_sent = 0 if @count
     @ping_results = []
     
     trap("INT") { results }
     loop do 
       ping
-      check_and_increment_counter if @count
+      results if @count && count_reached?
     end    
   end
 
@@ -70,9 +69,8 @@ class HTTPing
     puts "#{data.length.to_friendly_size} from #{@uri}: code=#{response.code} msg=#{response.message} time=#{difference.to_friendly_time}"
   end
   
-  def check_and_increment_counter
-    @pings_sent += 1
-    results if @count == @pings_sent
+  def count_reached?
+    @ping_results.size == @count
   end
   
   def results
