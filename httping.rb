@@ -86,23 +86,21 @@ end
 options = {}
 
 params = OptionParser.new do |opts|
+  options[:uri] = ARGV.first
   opts.banner = "Usage: httping.rb [options] uri"
-  opts.on('-c', '--count NUM', 'Number of times to ping host' ) do |count|
+  opts.on('-c', '--count NUM', 'Number of times to ping host') do |count|
     options[:count] = count
   end
-  opts.on( '-h', '--help', 'Display this screen' ) do
+  opts.on('-h', '--help', 'Display this screen') do
     puts opts
     exit
   end
+  opts.parse!
 end
 
-params.parse!
-
-uri = ARGV.first
-
-if uri
+if options[:uri]
   httping = HTTPing.new
-  httping.uri = uri
+  httping.uri = options[:uri]
   httping.count = options[:count]
   httping.run
 else
