@@ -59,6 +59,7 @@ class HTTPing
     loop do 
       ping
       results if count_reached?
+      sleep 1
     end    
   end
 
@@ -86,7 +87,6 @@ end
 options = {}
 
 params = OptionParser.new do |opts|
-  options[:uri] = ARGV.first
   opts.banner = "Usage: httping.rb [options] uri"
   opts.on('-c', '--count NUM', 'Number of times to ping host') do |count|
     options[:count] = count
@@ -96,6 +96,7 @@ params = OptionParser.new do |opts|
     exit
   end
   opts.parse!
+  options[:uri] = ARGV.first
 end
 
 if options[:uri]
