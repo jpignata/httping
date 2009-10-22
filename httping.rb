@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 
 require 'net/http'
+require 'optparse'
 
 module Enumerable
   def sum
@@ -35,20 +36,20 @@ end
 class HTTPing
   include Net
   include URI
-
-  def count=(count)
-    @count = count.to_i
-  end
     
   def uri=(uri)
     @uri = URI.parse(uri)
 
     unless @uri.class == URI::HTTP
-      puts "Invalid URI #{@uri}: Use format of http://host:port/uri-path"
+      puts "ERROR: Invalid URI #{@uri}"
       exit
     end
 
     @uri.path = "/" unless @uri.path.match /^\//
+  end
+
+  def count=(count)
+    @count = count.to_i
   end
 
   def run
@@ -57,7 +58,7 @@ class HTTPing
     trap("INT") { results }
     loop do 
       ping
-      results if @count && count_reached?
+      results if count_reached?
     end    
   end
 
@@ -69,10 +70,6 @@ class HTTPing
     puts "#{data.length.to_friendly_size} from #{@uri}: code=#{response.code} msg=#{response.message} time=#{difference.to_friendly_time}"
   end
   
-  def count_reached?
-    @ping_results.size == @count
-  end
-  
   def results
     puts
     puts "--- #{@uri} httping.rb statistics ---"
@@ -80,13 +77,34 @@ class HTTPing
     puts "round-trip min/avg/max = #{@ping_results.min.to_friendly_time}/#{@ping_results.mean.to_friendly_time}/#{@ping_results.max.to_friendly_time}"
     exit
   end
+  
+  def count_reached?
+    @ping_results.size == @count
+  end
 end
 
-if ARGV[0]
+options = {}
+
+params = OptionParser.new do |opts|
+  opts.banner = "Usage: httping.rb [options] uri"
+  opts.on('-c', '--count NUM', 'Number of times to ping host' ) do |count|
+    options[:count] = count
+  end
+  opts.on( '-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
+  end
+end
+
+params.parse!
+
+uri = ARGV.first
+
+if uri
   httping = HTTPing.new
-  httping.uri = ARGV[0]
-  httping.count = ARGV[1] if ARGV[1]
+  httping.uri = uri
+  httping.count = options[:count]
   httping.run
 else
-  puts "Usage: httping.rb <url> [count]"
+  puts params.banner
 end
