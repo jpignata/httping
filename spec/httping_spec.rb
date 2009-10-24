@@ -78,3 +78,35 @@ describe "HTTPing" do
     end
   end
 end
+
+describe "Runner" do  
+  before(:each) do
+    ARGV.clear
+    Output.clear
+  end
+
+  context ".parse_arguments" do
+    it "parses command-line arguments into an options hash" do
+      ARGV << "http://www.google.com"
+      ARGV << "--count"
+      ARGV << "3"
+
+      options = Runner.parse_arguments
+      options[:count].should == "3"
+      options[:uri].should == "http://www.google.com"
+    end
+  end
+
+  context ".run" do
+    it "returns the params banner if no arguments are passed" do
+      Runner.run
+      Output.output.should == "Usage: httping.rb [options] uri"
+    end
+
+    it "returns the params banner if invalid arguments are specified" do
+      ARGV << "-q"
+      Runner.run
+      Output.output.should == "invalid option: -q\nUsage: httping.rb [options] uri"
+    end
+  end
+end

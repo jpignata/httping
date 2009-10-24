@@ -86,31 +86,46 @@ class HTTPing
   end
 end
 
-def parse_arguments
-  params = OptionParser.new do |opts|
-    opts.banner = "Usage: httping.rb [options] uri"
-    opts.on('-c', '--count NUM', 'Number of times to ping host') do |count|
-      @options[:count] = count
+class Runner
+  BANNER = "Usage: httping.rb [options] uri"
+  
+  class << self
+    def parse_arguments
+      options = {}
+
+      begin
+        params = OptionParser.new do |opts|
+          opts.banner = BANNER
+          opts.on('-c', '--count NUM', 'Number of times to ping host') do |count|
+            options[:count] = count
+          end
+          opts.on('-h', '--help', 'Display this screen') do
+            puts opts
+            exit
+          end
+          opts.parse!
+          options[:uri] = ARGV.first
+        end
+      rescue OptionParser::InvalidOption => exception
+        puts exception
+      end
+      
+      options
     end
-    opts.on('-h', '--help', 'Display this screen') do
-      puts opts
-      exit
+
+    def run
+      options = parse_arguments
+
+      if options[:uri]
+        httping = HTTPing.new
+        httping.uri = options[:uri]
+        httping.count = options[:count]
+        httping.run
+      else
+        puts BANNER
+      end
     end
-    opts.parse!
-    @options[:uri] = ARGV.first
   end
 end
 
-unless @test
-  @options = {}
-  parse_arguments
-
-  if @options[:uri]
-    httping = HTTPing.new
-    httping.uri = @options[:uri]
-    httping.count = @options[:count]
-    httping.run
-  else
-    puts params.banner
-  end
-end
+Runner.run unless @test
