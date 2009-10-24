@@ -62,7 +62,7 @@ describe "HTTPing" do
   context ".ping" do
     it "pings the configured url and outputs statistics" do
       @httping.ping 
-      Output.output.should == "10 bytes from http://www.google.com/: code=200 msg=OK time=0 msecs"
+      Output.output.should match(/10 bytes from http:\/\/www.google.com\/: code=200 msg=OK time=[0-9] msecs/)
     end
   end
 
@@ -75,6 +75,18 @@ describe "HTTPing" do
     it "returns true if a host has been pinged the number of times requested" do
       10.times { @httping.ping }
       @httping.should be_count_reached
+    end
+  end
+  
+  context ".results" do
+    before do
+      5.times { @httping.ping }
+      Output.clear
+    end
+    
+    it "outputs a summary of the pings" do
+      @httping.results
+      Output.output.should match(/-- http:\/\/www.google.com\/ httping.rb statistics ---\n5 GETs transmitted\n/)
     end
   end
 end
@@ -104,9 +116,9 @@ describe "Runner" do
     end
 
     it "returns the params banner if invalid arguments are specified" do
-      ARGV << "-q"
+      ARGV << "-z"
       Runner.run
-      Output.output.should == "invalid option: -q\nUsage: httping.rb [options] uri"
+      Output.output.should == "invalid option: -z\nUsage: httping.rb [options] uri"
     end
   end
 end

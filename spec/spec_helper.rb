@@ -7,9 +7,19 @@ require 'fakeweb'
 FakeWeb.allow_net_connect = false
 FakeWeb.register_uri(:any, "http://www.google.com", :body => "hey there.")
 
+class Object
+  def exit(status_code = nil)
+    @status = status_code
+  end
+
+  def puts(output_string = "\n")
+    Output.puts(output_string)
+  end
+end
+
 class Output 
   class << self
-    def puts (output_string)
+    def puts (output_string = "\n")
       @output = [] if @output.nil?
       @output << output_string
     end
@@ -22,8 +32,4 @@ class Output
       @output.clear
     end
   end
-end
-
-def puts(output_string)
-  Output.puts(output_string)
 end
