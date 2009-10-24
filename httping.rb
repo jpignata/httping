@@ -14,7 +14,7 @@ module Enumerable
 end
 
 class Float
-  def to_friendly_time
+  def to_human_time
     case self
       when 0..1 then "#{(self * 1000).floor} msecs"
       when 1..2 then "1 sec"
@@ -24,7 +24,7 @@ class Float
 end
 
 class Fixnum
-  def to_friendly_size
+  def to_human_size
     case self
       when 1024..1048576 then "#{self / 1024} kb"
       when 1048576..1073741824 then "#{self / 1048576} mb"
@@ -36,6 +36,10 @@ end
 class HTTPing
   include Net
   include URI
+
+  def initialize
+    @ping_results = []
+  end
     
   def uri=(uri)
     @uri = URI.parse(uri)
@@ -53,8 +57,6 @@ class HTTPing
   end
 
   def run
-    @ping_results = []
-    
     trap("INT") { results }
     loop do 
       ping
@@ -68,14 +70,14 @@ class HTTPing
     start_time = Time.now
     response, data = request.get("#{@uri.path}?#{@uri.query}")
     @ping_results << difference = Time.now - start_time
-    puts "#{data.length.to_friendly_size} from #{@uri}: code=#{response.code} msg=#{response.message} time=#{difference.to_friendly_time}"
+    puts "#{data.length.to_human_size} from #{@uri}: code=#{response.code} msg=#{response.message} time=#{difference.to_human_time}"
   end
   
   def results
     puts
     puts "--- #{@uri} httping.rb statistics ---"
     puts "#{@ping_results.size} GETs transmitted"
-    puts "round-trip min/avg/max = #{@ping_results.min.to_friendly_time}/#{@ping_results.mean.to_friendly_time}/#{@ping_results.max.to_friendly_time}"
+    puts "round-trip min/avg/max = #{@ping_results.min.to_human_time}/#{@ping_results.mean.to_human_time}/#{@ping_results.max.to_human_time}"
     exit
   end
   
@@ -84,26 +86,31 @@ class HTTPing
   end
 end
 
-options = {}
-
-params = OptionParser.new do |opts|
-  opts.banner = "Usage: httping.rb [options] uri"
-  opts.on('-c', '--count NUM', 'Number of times to ping host') do |count|
-    options[:count] = count
+def parse_arguments
+  params = OptionParser.new do |opts|
+    opts.banner = "Usage: httping.rb [options] uri"
+    opts.on('-c', '--count NUM', 'Number of times to ping host') do |count|
+      @options[:count] = count
+    end
+    opts.on('-h', '--help', 'Display this screen') do
+      puts opts
+      exit
+    end
+    opts.parse!
+    @options[:uri] = ARGV.first
   end
-  opts.on('-h', '--help', 'Display this screen') do
-    puts opts
-    exit
-  end
-  opts.parse!
-  options[:uri] = ARGV.first
 end
 
-if options[:uri]
-  httping = HTTPing.new
-  httping.uri = options[:uri]
-  httping.count = options[:count]
-  httping.run
-else
-  puts params.banner
+unless @test
+  @options = {}
+  parse_arguments
+
+  if @options[:uri]
+    httping = HTTPing.new
+    httping.uri = @options[:uri]
+    httping.count = @options[:count]
+    httping.run
+  else
+    puts params.banner
+  end
 end
