@@ -55,14 +55,14 @@ end
 describe "HTTPing" do
   before do
     @httping = HTTPing.new
-    @httping.uri = "http://www.google.com"
+    @httping.uri = "http://www.example.com"
     @httping.count = 10
   end
 
   context ".ping" do
     it "pings the configured url and outputs statistics" do
       @httping.ping 
-      Output.output.should match(/10 bytes from http:\/\/www.google.com\/: code=200 msg=OK time=[0-9] msecs/)
+      Output.output.should match(/10 bytes from http:\/\/www.example.com\/: code=200 msg=OK time=[0-9] msecs/)
     end
   end
 
@@ -86,7 +86,7 @@ describe "HTTPing" do
     
     it "outputs a summary of the pings" do
       @httping.results
-      Output.output.should match(/-- http:\/\/www.google.com\/ httping.rb statistics ---\n5 GETs transmitted\n/)
+      Output.output.should match(/-- http:\/\/www.example.com\/ httping.rb statistics ---\n5 GETs transmitted\n/)
     end
   end
 end
@@ -99,13 +99,13 @@ describe "Runner" do
 
   context ".parse_arguments" do
     it "parses command-line arguments into an options hash" do
-      ARGV << "http://www.google.com"
+      ARGV << "http://www.example.com"
       ARGV << "--count"
       ARGV << "3"
 
       options = Runner.parse_arguments
       options[:count].should == "3"
-      options[:uri].should == "http://www.google.com"
+      options[:uri].should == "http://www.example.com"
     end
   end
 
