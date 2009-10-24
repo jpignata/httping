@@ -24,7 +24,7 @@ class Output
       @output << output_string
     end
   
-    def output
+    def to_s
       @output.join("\n")
     end
     

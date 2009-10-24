@@ -62,7 +62,7 @@ describe "HTTPing" do
   context ".ping" do
     it "pings the configured url and outputs statistics" do
       @httping.ping 
-      Output.output.should match(/10 bytes from http:\/\/www.example.com\/: code=200 msg=OK time=[0-9] msecs/)
+      Output.to_s.should match(/10 bytes from http:\/\/www.example.com\/: code=200 msg=OK time=[0-9] msecs/)
     end
   end
 
@@ -86,7 +86,19 @@ describe "HTTPing" do
     
     it "outputs a summary of the pings" do
       @httping.results
-      Output.output.should match(/-- http:\/\/www.example.com\/ httping.rb statistics ---\n5 GETs transmitted\n/)
+      Output.to_s.should match(/-- http:\/\/www.example.com\/ httping.rb statistics ---\n5 GETs transmitted\n/)
+    end
+  end
+  
+  context ".uri=" do
+    before do
+      Output.clear
+      @httping = HTTPing.new
+      @httping.uri = "https://www.example.com"
+    end
+    
+    it "outputs an error and exists if not given an HTTP uri" do
+      Output.to_s.should == "ERROR: Invalid URI https://www.example.com"
     end
   end
 end
@@ -112,13 +124,13 @@ describe "Runner" do
   context ".run" do
     it "returns the params banner if no arguments are passed" do
       Runner.run
-      Output.output.should == "Usage: httping.rb [options] uri"
+      Output.to_s.should == "Usage: httping.rb [options] uri"
     end
 
     it "returns the params banner if invalid arguments are specified" do
       ARGV << "-z"
       Runner.run
-      Output.output.should == "invalid option: -z\nUsage: httping.rb [options] uri"
+      Output.to_s.should == "invalid option: -z\nUsage: httping.rb [options] uri"
     end
   end
 end
