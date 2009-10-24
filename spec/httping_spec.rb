@@ -59,6 +59,13 @@ describe "HTTPing" do
     @httping.count = 10
   end
 
+  context ".ping" do
+    it "pings the configured url and outputs statistics" do
+      @httping.ping 
+      Output.output.should == "10 bytes from http://www.google.com/: code=200 msg=OK time=0 msecs"
+    end
+  end
+
   context ".count_reached?" do
     it "returns false if a host has not yet been pinged the number of times requested" do
       2.times { @httping.ping }
