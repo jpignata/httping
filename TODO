@@ -1,0 +1,6 @@
+-f - flood ping
+-a - audible ping
+-i - seconds to sleep between pings
+- SSL
+-j - json results
+-q - ping once, return OK or NOT OK and appropriate exit code

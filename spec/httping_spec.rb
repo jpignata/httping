@@ -107,6 +107,7 @@ describe "Runner" do
   before(:each) do
     ARGV.clear
     Output.clear
+    @runner = Runner.new
   end
 
   context ".parse_arguments" do
@@ -115,7 +116,7 @@ describe "Runner" do
       ARGV << "--count"
       ARGV << "3"
 
-      options = Runner.parse_arguments
+      options = @runner.parse_arguments
       options[:count].should == "3"
       options[:uri].should == "http://www.example.com"
     end
@@ -123,13 +124,13 @@ describe "Runner" do
 
   context ".run" do
     it "returns the params banner if no arguments are passed" do
-      Runner.run
+      @runner.run
       Output.to_s.should == "Usage: httping.rb [options] uri"
     end
 
     it "returns the params banner if invalid arguments are specified" do
       ARGV << "-z"
-      Runner.run
+      @runner.run
       Output.to_s.should == "invalid option: -z\nUsage: httping.rb [options] uri"
     end
   end
