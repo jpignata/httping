@@ -19,7 +19,7 @@ end
 
 class Output 
   class << self
-    def puts (output_string = "\n")
+    def puts(output_string)
       @output = [] if @output.nil?
       @output << output_string
     end

@@ -37,6 +37,8 @@ class HTTPing
   include Net
   include URI
 
+  attr_writer :flood
+
   def initialize
     @ping_results = []
   end
@@ -61,7 +63,7 @@ class HTTPing
     loop do 
       ping
       results if count_reached?
-      sleep 1
+      sleep 1 unless @flood
     end    
   end
 
@@ -96,6 +98,7 @@ class Runner
       httping = HTTPing.new
       httping.uri = options[:uri]
       httping.count = options[:count]
+      httping.flood = options[:flood]
       httping.run
     else
       puts BANNER
@@ -103,13 +106,18 @@ class Runner
   end
 
   def parse_arguments
-    options = {}
+    options = {
+      :flood => false
+    }
 
     begin
       params = OptionParser.new do |opts|
         opts.banner = BANNER
         opts.on('-c', '--count NUM', 'Number of times to ping host') do |count|
           options[:count] = count
+        end
+        opts.on('-f', '--flood', 'Flood ping (no delay)') do 
+          options[:flood] = true
         end
         opts.on('-h', '--help', 'Display this screen') do
           puts opts
