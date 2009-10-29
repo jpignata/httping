@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 
 require 'net/http'
+require 'net/https'
 require 'optparse'
 
 module Enumerable
@@ -46,7 +47,7 @@ class HTTPing
   def uri=(uri)
     @uri = URI.parse(uri)
 
-    unless @uri.class == URI::HTTP
+    unless ["http", "https"].include?(@uri.scheme) 
       puts "ERROR: Invalid URI #{@uri}"
       exit
     end
@@ -69,6 +70,12 @@ class HTTPing
 
   def ping
     request = Net::HTTP.new(@uri.host, @uri.port)
+    
+    if @uri.scheme == "https"
+      request.use_ssl = true
+      request.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    end
+    
     start_time = Time.now
     response, data = request.get("#{@uri.path}?#{@uri.query}")
     @ping_results << duration = Time.now - start_time
@@ -119,12 +126,6 @@ class Runner
   def run
     options = parse_arguments
     
-    if options[:format] == :json && !options.include?(:count)
-      options[:count] = 5 # Default to 5 if no count provided
-    elsif options[:format] == :quick
-      options[:count] = 1 # Quick format always sends only 1 ping
-    end
-    
     if options[:uri]
       httping = HTTPing.new
       httping.uri = options[:uri]
@@ -167,6 +168,12 @@ class Runner
       end
     rescue OptionParser::InvalidOption => exception
       puts exception
+    end
+    
+    if options[:format] == :json && !options.include?(:count)
+      options[:count] = 5 # Default to 5 if no count provided
+    elsif options[:format] == :quick
+      options[:count] = 1 # Quick format always sends only 1 ping
     end
   
     options

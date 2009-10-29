@@ -95,13 +95,26 @@ describe "HTTPing" do
   end
   
   context ".uri=" do
-    before do
-      @httping = HTTPing.new
-      @httping.uri = "https://www.example.com"
+    before(:each) do
+      Output.clear
+    end
+
+    it "outputs an error and exists if not given an HTTP(S) URI" do
+      httping = HTTPing.new
+      httping.uri = "ftp://www.example.com"
+      Output.to_s.should == "ERROR: Invalid URI ftp://www.example.com"
     end
     
-    it "outputs an error and exists if not given an HTTP uri" do
-      Output.to_s.should == "ERROR: Invalid URI https://www.example.com"
+    it "accepts HTTP URIs" do
+      httping = HTTPing.new
+      httping.uri = "http://www.example.com"
+      Output.to_s.should_not match(/ERROR/)
+    end
+
+    it "accepts HTTPS URIs" do
+      httping = HTTPing.new
+      httping.uri = "https://www.example.com"
+      Output.to_s.should_not match(/ERROR/)
     end
   end
 end
