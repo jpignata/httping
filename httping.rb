@@ -37,7 +37,7 @@ class HTTPing
   include Net
   include URI
 
-  attr_writer :flood
+  attr_writer :flood, :format
 
   def initialize
     @ping_results = []
@@ -71,18 +71,38 @@ class HTTPing
     request = Net::HTTP.new(@uri.host, @uri.port)
     start_time = Time.now
     response, data = request.get("#{@uri.path}?#{@uri.query}")
-    @ping_results << difference = Time.now - start_time
-    puts "#{data.length.to_human_size} from #{@uri}: code=#{response.code} msg=#{response.message} time=#{difference.to_human_time}"
+    @ping_results << duration = Time.now - start_time
+    ping_summary(response, data, duration) if @format == :interactive
   end
-  
+
+  def ping_summary(response, data, duration)
+    puts "#{data.length.to_human_size} from #{@uri}: code=#{response.code} msg=#{response.message} time=#{duration.to_human_time}"
+  end
+
   def results
+    if @format.nil?
+      interactive_results
+    else
+      send("#{@format}_results")
+    end
+    
+    exit
+  end
+
+  def interactive_results
     puts
     puts "--- #{@uri} httping.rb statistics ---"
     puts "#{@ping_results.size} GETs transmitted"
     puts "round-trip min/avg/max = #{@ping_results.min.to_human_time}/#{@ping_results.mean.to_human_time}/#{@ping_results.max.to_human_time}"
-    exit
   end
   
+  def json_results
+    results = "{\"max\": #{@ping_results.max}, \"avg\": #{@ping_results.mean}, \"min\": #{@ping_results.min}}"
+    sent = @ping_results.size
+    uri = @uri.to_s
+    puts "{\"results\": #{results}, \"sent\": #{sent}, \"uri\": \"#{uri}\"}"
+  end
+
   def count_reached?
     @ping_results.size == @count
   end
@@ -93,10 +113,15 @@ class Runner
   
   def run
     options = parse_arguments
-
+    
+    if options[:format] == :json && !options.include?(:count)
+      options[:count] = 5
+    end
+    
     if options[:uri]
       httping = HTTPing.new
       httping.uri = options[:uri]
+      httping.format = options[:format]
       httping.count = options[:count]
       httping.flood = options[:flood]
       httping.run
@@ -107,6 +132,7 @@ class Runner
 
   def parse_arguments
     options = {
+      :format => :interactive,
       :flood => false
     }
 
@@ -118,6 +144,9 @@ class Runner
         end
         opts.on('-f', '--flood', 'Flood ping (no delay)') do 
           options[:flood] = true
+        end
+        opts.on('-j', '--json', 'Return JSON results') do 
+          options[:format] = :json
         end
         opts.on('-h', '--help', 'Display this screen') do
           puts opts

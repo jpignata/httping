@@ -25,11 +25,11 @@ class Output
     end
   
     def to_s
-      @output.join("\n")
+      @output.join("\n") if @output
     end
     
     def clear
-      @output.clear
+      @output.clear if @output
     end
   end
 end

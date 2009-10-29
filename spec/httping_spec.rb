@@ -56,6 +56,7 @@ describe "HTTPing" do
   before do
     @httping = HTTPing.new
     @httping.uri = "http://www.example.com"
+    @httping.format = :interactive
     @httping.count = 10
   end
 
