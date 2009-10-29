@@ -55,7 +55,7 @@ end
 describe "HTTPing" do
   before do
     @httping = HTTPing.new
-    @httping.uri = "http://www.example.com"
+    @httping.uri = URI.parse("http://www.example.com/")
     @httping.format = :interactive
     @httping.count = 10
   end
@@ -92,31 +92,7 @@ describe "HTTPing" do
       @httping.results
       Output.to_s.should match(/-- http:\/\/www.example.com\/ httping.rb statistics ---\n5 GETs transmitted\n/)
     end
-  end
-  
-  context ".uri=" do
-    before(:each) do
-      Output.clear
-    end
-
-    it "outputs an error and exists if not given an HTTP(S) URI" do
-      httping = HTTPing.new
-      httping.uri = "ftp://www.example.com"
-      Output.to_s.should == "ERROR: Invalid URI ftp://www.example.com"
-    end
-    
-    it "accepts HTTP URIs" do
-      httping = HTTPing.new
-      httping.uri = "http://www.example.com"
-      Output.to_s.should_not match(/ERROR/)
-    end
-
-    it "accepts HTTPS URIs" do
-      httping = HTTPing.new
-      httping.uri = "https://www.example.com"
-      Output.to_s.should_not match(/ERROR/)
-    end
-  end
+  end  
 end
 
 describe "Runner" do  
@@ -137,7 +113,7 @@ describe "Runner" do
 
       options = @runner.parse_arguments
       options[:count].should == 3
-      options[:uri].should == "http://www.example.com"
+      options[:uri].to_s.should == "http://www.example.com/"
     end
   end
 
@@ -151,6 +127,29 @@ describe "Runner" do
       ARGV << "-z"
       @runner.run
       Output.to_s.should == "invalid option: -z\nUsage: httping.rb [options] uri"
+    end
+  end
+  
+  context "parse_uri" do
+    it "outputs an error and exists if not given an HTTP(S) URI" do
+      ARGV.clear
+      ARGV << "ftp://www.example.com"
+      @runner.parse_uri
+      Output.to_s.should == "ERROR: Invalid URI ftp://www.example.com"
+    end
+    
+    it "accepts HTTP URIs" do
+      ARGV.clear
+      ARGV << "http://www.example.com"
+      @runner.parse_uri
+      Output.to_s.should_not match(/ERROR/)
+    end
+
+    it "accepts HTTPS URIs" do
+      ARGV.clear
+      ARGV << "https://www.example.com"
+      @runner.parse_uri
+      Output.to_s.should_not match(/ERROR/)
     end
   end
 end

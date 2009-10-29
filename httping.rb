@@ -38,21 +38,10 @@ class HTTPing
   include Net
   include URI
 
-  attr_writer :flood, :format, :audible, :user_agent, :referrer, :delay, :count
+  attr_writer :flood, :format, :audible, :user_agent, :referrer, :delay, :count, :uri
 
   def initialize
     @ping_results = []
-  end
-    
-  def uri=(uri)
-    @uri = URI.parse(uri)
-
-    unless ["http", "https"].include?(@uri.scheme) 
-      puts "ERROR: Invalid URI #{@uri}"
-      exit
-    end
-
-    @uri.path = "/" unless @uri.path.match /^\//
   end
   
   def run
@@ -195,7 +184,7 @@ class Runner
           exit
         end
         opts.parse!
-        options[:uri] = ARGV.first
+        options[:uri] = parse_uri if ARGV.first
       end
     rescue OptionParser::InvalidOption => exception
       puts exception
@@ -209,6 +198,19 @@ class Runner
   
     options
   end
+  
+  def parse_uri
+    uri = URI.parse(ARGV.first)
+
+    unless ["http", "https"].include?(uri.scheme) 
+      puts "ERROR: Invalid URI #{uri}"
+      exit
+    end
+
+    uri.path = "/" unless uri.path.match /^\//
+    
+    uri
+  end  
 end
 
 Runner.new.run unless defined?(Spec)
