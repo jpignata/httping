@@ -36,7 +36,6 @@ end
 
 class HTTPing
   include Net
-  include URI
 
   attr_writer :flood, :format, :audible, :user_agent, :referrer, :delay, :count, :uri
 
