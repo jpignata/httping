@@ -152,13 +152,7 @@ class Runner
     
     if options[:uri]
       httping = HTTPing.new
-      httping.uri = options[:uri]
-      httping.format = options[:format]
-      httping.count = options[:count]
-      httping.flood = options[:flood]
-      httping.audible = options[:audible]
-      httping.user_agent = options[:user_agent]
-      httping.referrer = options[:referrer]
+      options.each { |property, value| httping.send("#{property}=", value) }
       httping.run
     else
       puts BANNER
