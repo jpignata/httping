@@ -202,7 +202,7 @@ class Runner
     end
     
     if options[:format] == :json && !options.include?(:count)
-      options[:count] = 5 # Default to 5 if no count provided
+      options[:count] = 5 # Default to 5 if no count provided for JSON format
     elsif options[:format] == :quick
       options[:count] = 1 # Quick format always sends only 1 ping
     end
