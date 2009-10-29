@@ -38,7 +38,7 @@ class HTTPing
   include Net
   include URI
 
-  attr_writer :flood, :format, :audible
+  attr_writer :flood, :format, :audible, :user_agent, :referrer
 
   def initialize
     @ping_results = []
@@ -58,7 +58,7 @@ class HTTPing
   def count=(count)
     @count = count.to_i
   end
-
+  
   def run
     trap("INT") { results }
     loop do 
@@ -69,17 +69,36 @@ class HTTPing
   end
 
   def ping
+    start_time = Time.now
+    response, data = request.get(uri, http_header)
+    @ping_results << duration = Time.now - start_time
+    ping_summary(response, data, duration) if @format == :interactive
+  end
+  
+  def request
     request = Net::HTTP.new(@uri.host, @uri.port)
-    
+
     if @uri.scheme == "https"
       request.use_ssl = true
       request.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
     
-    start_time = Time.now
-    response, data = request.get("#{@uri.path}?#{@uri.query}")
-    @ping_results << duration = Time.now - start_time
-    ping_summary(response, data, duration) if @format == :interactive
+    request
+  end
+  
+  def uri
+    if @uri.query
+      "#{@uri.path}?#{@uri.query}"
+    else
+      "#{@uri.path}"
+    end
+  end
+  
+  def http_header
+    header = {}
+    header['User-Agent'] = @user_agent if @user_agent
+    header['Referrer'] = @referrer if @referrer 
+    header   
   end
 
   def ping_summary(response, data, duration)
@@ -138,6 +157,8 @@ class Runner
       httping.count = options[:count]
       httping.flood = options[:flood]
       httping.audible = options[:audible]
+      httping.user_agent = options[:user_agent]
+      httping.referrer = options[:referrer]
       httping.run
     else
       puts BANNER
@@ -168,6 +189,12 @@ class Runner
         end
         opts.on('-a', '--audible', 'Beep on each ping') do 
           options[:audible] = true
+        end
+        opts.on('-u', '--user-agent STR', 'User agent string to send in headers') do |user_agent|
+          options[:user_agent] = user_agent
+        end
+        opts.on('-r', '--referrer STR', 'Referrer string to send in headers') do |referrer|
+          options[:referrer] = referrer
         end
         opts.on('-h', '--help', 'Display this screen') do
           puts opts
