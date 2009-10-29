@@ -107,7 +107,7 @@ class HTTPing
   end
 
   def beep
-    007.chr
+    7.chr
   end
 
   def results
