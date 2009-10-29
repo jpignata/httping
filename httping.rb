@@ -38,7 +38,7 @@ class HTTPing
   include Net
   include URI
 
-  attr_writer :flood, :format
+  attr_writer :flood, :format, :audible
 
   def initialize
     @ping_results = []
@@ -83,7 +83,12 @@ class HTTPing
   end
 
   def ping_summary(response, data, duration)
+    print beep if @audible
     puts "#{data.length.to_human_size} from #{@uri}: code=#{response.code} msg=#{response.message} time=#{duration.to_human_time}"
+  end
+
+  def beep
+    007.chr
   end
 
   def results
@@ -132,6 +137,7 @@ class Runner
       httping.format = options[:format]
       httping.count = options[:count]
       httping.flood = options[:flood]
+      httping.audible = options[:audible]
       httping.run
     else
       puts BANNER
@@ -141,7 +147,8 @@ class Runner
   def parse_arguments
     options = {
       :format => :interactive,
-      :flood => false
+      :flood => false,
+      :audible => false
     }
 
     begin
@@ -158,6 +165,9 @@ class Runner
         end
         opts.on('-q', '--quick', 'Ping once and return OK if up') do 
           options[:format] = :quick
+        end
+        opts.on('-a', '--audible', 'Beep on each ping') do 
+          options[:audible] = true
         end
         opts.on('-h', '--help', 'Display this screen') do
           puts opts
