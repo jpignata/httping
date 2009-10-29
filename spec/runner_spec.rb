@@ -37,21 +37,18 @@ describe "Runner" do
   
   context "parse_uri" do
     it "outputs an error and exists if not given an HTTP(S) URI" do
-      ARGV.clear
       ARGV << "ftp://www.example.com"
       @runner.parse_uri
       Output.to_s.should == "ERROR: Invalid URI ftp://www.example.com"
     end
     
     it "accepts HTTP URIs" do
-      ARGV.clear
       ARGV << "http://www.example.com"
       @runner.parse_uri
       Output.to_s.should_not match(/ERROR/)
     end
 
     it "accepts HTTPS URIs" do
-      ARGV.clear
       ARGV << "https://www.example.com"
       @runner.parse_uri
       Output.to_s.should_not match(/ERROR/)
