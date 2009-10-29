@@ -1,5 +1,6 @@
 require 'spec'
-require 'httping'
+require File.join(File.dirname(__FILE__), '../lib/httping')
+
 
 require 'fakeweb'
 FakeWeb.allow_net_connect = false
