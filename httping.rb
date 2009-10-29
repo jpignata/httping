@@ -103,6 +103,11 @@ class HTTPing
     puts "{\"results\": #{results}, \"sent\": #{sent}, \"uri\": \"#{uri}\"}"
   end
 
+  def quick_results
+    duration = @ping_results.first.to_human_time
+    puts "OK [#{duration}]"
+  end
+
   def count_reached?
     @ping_results.size == @count
   end
@@ -115,7 +120,9 @@ class Runner
     options = parse_arguments
     
     if options[:format] == :json && !options.include?(:count)
-      options[:count] = 5
+      options[:count] = 5 # Default to 5 if no count provided
+    elsif options[:format] == :quick
+      options[:count] = 1 # Quick format always sends only 1 ping
     end
     
     if options[:uri]
@@ -147,6 +154,9 @@ class Runner
         end
         opts.on('-j', '--json', 'Return JSON results') do 
           options[:format] = :json
+        end
+        opts.on('-q', '--quick', 'Ping once and return OK if up') do 
+          options[:format] = :quick
         end
         opts.on('-h', '--help', 'Display this screen') do
           puts opts

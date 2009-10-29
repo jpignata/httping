@@ -1,4 +1,3 @@
 -a - audible ping
 -i - seconds to sleep between pings
 - SSL
--q - ping once, return OK or NOT OK and appropriate exit code
