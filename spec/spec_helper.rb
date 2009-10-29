@@ -1,6 +1,4 @@
 require 'spec'
-
-@test = true
 require 'httping'
 
 require 'fakeweb'

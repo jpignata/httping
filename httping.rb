@@ -217,4 +217,4 @@ class Runner
   end
 end
 
-Runner.new.run unless @test
+Runner.new.run unless defined?(Spec)
