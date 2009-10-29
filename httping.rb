@@ -38,7 +38,7 @@ class HTTPing
   include Net
   include URI
 
-  attr_writer :flood, :format, :audible, :user_agent, :referrer
+  attr_writer :flood, :format, :audible, :user_agent, :referrer, :delay
 
   def initialize
     @ping_results = []
@@ -64,7 +64,7 @@ class HTTPing
     loop do 
       ping
       results if count_reached?
-      sleep 1 unless @flood
+      sleep @delay unless @flood
     end    
   end
 
@@ -161,6 +161,7 @@ class Runner
 
   def parse_arguments
     options = {
+      :delay => 1,
       :format => :interactive,
       :flood => false,
       :audible => false
@@ -171,6 +172,9 @@ class Runner
         opts.banner = BANNER
         opts.on('-c', '--count NUM', 'Number of times to ping host') do |count|
           options[:count] = count
+        end
+        opts.on('-d', '--delay SECS', 'Delay in seconds between pings (default: 1)') do |delay|
+          options[:delay] = delay.to_i
         end
         opts.on('-f', '--flood', 'Flood ping (no delay)') do 
           options[:flood] = true
