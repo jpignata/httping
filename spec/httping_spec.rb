@@ -136,7 +136,7 @@ describe "Runner" do
       ARGV << "3"
 
       options = @runner.parse_arguments
-      options[:count].should == "3"
+      options[:count].should == 3
       options[:uri].should == "http://www.example.com"
     end
   end

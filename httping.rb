@@ -38,7 +38,7 @@ class HTTPing
   include Net
   include URI
 
-  attr_writer :flood, :format, :audible, :user_agent, :referrer, :delay
+  attr_writer :flood, :format, :audible, :user_agent, :referrer, :delay, :count
 
   def initialize
     @ping_results = []
@@ -53,10 +53,6 @@ class HTTPing
     end
 
     @uri.path = "/" unless @uri.path.match /^\//
-  end
-
-  def count=(count)
-    @count = count.to_i
   end
   
   def run
@@ -171,7 +167,7 @@ class Runner
       params = OptionParser.new do |opts|
         opts.banner = BANNER
         opts.on('-c', '--count NUM', 'Number of times to ping host') do |count|
-          options[:count] = count
+          options[:count] = count.to_i
         end
         opts.on('-d', '--delay SECS', 'Delay in seconds between pings (default: 1)') do |delay|
           options[:delay] = delay.to_i
