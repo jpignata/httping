@@ -59,6 +59,10 @@ describe "HTTPing" do
     @httping.count = 10
   end
 
+  after(:each) do
+    Output.clear
+  end
+
   context ".ping" do
     it "pings the configured url and outputs statistics" do
       @httping.ping 
@@ -81,7 +85,6 @@ describe "HTTPing" do
   context ".results" do
     before do
       5.times { @httping.ping }
-      Output.clear
     end
     
     it "outputs a summary of the pings" do
@@ -92,7 +95,6 @@ describe "HTTPing" do
   
   context ".uri=" do
     before do
-      Output.clear
       @httping = HTTPing.new
       @httping.uri = "https://www.example.com"
     end
@@ -106,8 +108,11 @@ end
 describe "Runner" do  
   before(:each) do
     ARGV.clear
-    Output.clear
     @runner = Runner.new
+  end
+
+  after(:each) do
+    Output.clear
   end
 
   context ".parse_arguments" do
