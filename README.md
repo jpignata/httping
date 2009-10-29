@@ -8,21 +8,21 @@ Tickets can be submitted by via GitHub issues.
 
 ## Example Usage
 
-jpignata@populuxe:~$ httping --count 10 --user-agent "HTTPinger" http://www.google.com
-5 kb from http://www.google.com/: code=200 msg=OK time=51 msecs
-5 kb from http://www.google.com/: code=200 msg=OK time=61 msecs
-5 kb from http://www.google.com/: code=200 msg=OK time=74 msecs
-5 kb from http://www.google.com/: code=200 msg=OK time=48 msecs
-5 kb from http://www.google.com/: code=200 msg=OK time=106 msecs
-5 kb from http://www.google.com/: code=200 msg=OK time=51 msecs
-5 kb from http://www.google.com/: code=200 msg=OK time=52 msecs
-5 kb from http://www.google.com/: code=200 msg=OK time=50 msecs
-5 kb from http://www.google.com/: code=200 msg=OK time=59 msecs
-5 kb from http://www.google.com/: code=200 msg=OK time=60 msecs
-
---- http://www.google.com/ httping.rb statistics ---
-10 GETs transmitted
-round-trip min/avg/max = 48 msecs/61 msecs/106 msecs
+    jpignata@populuxe:~$ httping --count 10 --user-agent "HTTPinger" http://www.google.com
+    5 kb from http://www.google.com/: code=200 msg=OK time=51 msecs
+    5 kb from http://www.google.com/: code=200 msg=OK time=61 msecs
+    5 kb from http://www.google.com/: code=200 msg=OK time=74 msecs
+    5 kb from http://www.google.com/: code=200 msg=OK time=48 msecs
+    5 kb from http://www.google.com/: code=200 msg=OK time=106 msecs
+    5 kb from http://www.google.com/: code=200 msg=OK time=51 msecs
+    5 kb from http://www.google.com/: code=200 msg=OK time=52 msecs
+    5 kb from http://www.google.com/: code=200 msg=OK time=50 msecs
+    5 kb from http://www.google.com/: code=200 msg=OK time=59 msecs
+    5 kb from http://www.google.com/: code=200 msg=OK time=60 msecs
+    
+    --- http://www.google.com/ httping.rb statistics ---
+    10 GETs transmitted
+    round-trip min/avg/max = 48 msecs/61 msecs/106 msecs
 
 
 ## Command-line Options
