@@ -13,15 +13,11 @@ describe "Runner" do
   context ".parse_arguments" do
     it "parses command-line arguments into an options hash" do
       ARGV << "http://www.example.com"
-      ARGV << "--count"
-      ARGV << "3"
-      ARGV << "--delay"
-      ARGV << "2"
+      ARGV << "--count" << "3"
+      ARGV << "--delay" << "2"
       ARGV << "--audible"
-      ARGV << "--user-agent"
-      ARGV << "Mozilla"
-      ARGV << "--referrer"
-      ARGV << "http://www.example.com/about-us"
+      ARGV << "--user-agent" << "Mozilla"
+      ARGV << "--referrer" << "http://www.example.com/about-us"
       ARGV << "--flood"
 
       options = @runner.parse_arguments
@@ -67,6 +63,14 @@ describe "Runner" do
       ARGV << "-z"
       @runner.run
       Output.to_s.should == "invalid option: -z\nUsage: httping [options] uri"
+    end
+
+    it "creates a ping object based upon passed in parameters" do
+      ARGV << "http://www.example.com"
+      ARGV << "--count" << "5"
+      ARGV << "--flood"
+      @runner.run
+      Output.to_s.should match(/5 GETs transmitted/)
     end
   end
   
