@@ -15,10 +15,45 @@ describe "Runner" do
       ARGV << "http://www.example.com"
       ARGV << "--count"
       ARGV << "3"
+      ARGV << "--delay"
+      ARGV << "2"
+      ARGV << "--audible"
+      ARGV << "--user-agent"
+      ARGV << "Mozilla"
+      ARGV << "--referrer"
+      ARGV << "http://www.example.com/about-us"
+      ARGV << "--flood"
 
       options = @runner.parse_arguments
       options[:count].should == 3
+      options[:delay].should == 2
+      options[:audible].should be
+      options[:flood].should be
+      options[:user_agent].to_s.should == "Mozilla"
+      options[:referrer].to_s.should == "http://www.example.com/about-us"
       options[:uri].to_s.should == "http://www.example.com/"
+    end
+
+    it "defaults count to 5 if JSON format is flag passed" do
+      ARGV << "http://www.example.com"
+      ARGV << "--json"
+      
+      options = @runner.parse_arguments
+      options[:count].should == 5
+    end
+
+    it "sets count to 1 if quick format is flag passed" do
+      ARGV << "http://www.example.com"
+      ARGV << "--quick"
+      
+      options = @runner.parse_arguments
+      options[:count].should == 1
+    end
+
+    it "outputs a help screen if help flag passed" do
+      ARGV << "--help"
+      @runner.parse_arguments
+      Output.to_s.should match(/-j, --json *Return JSON results/)
     end
   end
 
