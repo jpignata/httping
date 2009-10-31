@@ -19,7 +19,6 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "httping"
-    gem.date = %q{2009-09-15}
     gem.default_executable = %q{httping}
     gem.summary = "Measures web site response time"
     gem.description = "Measures web site response time"
