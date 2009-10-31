@@ -59,12 +59,7 @@ class Ping
   end
 
   def results
-    if @format.nil?
-      interactive_results
-    else
-      send("#{@format}_results")
-    end
-    
+    send("#{@format}_results")
     exit
   end
 
