@@ -9,11 +9,14 @@ class Ping
   
   def run
     trap("INT") { results }
+    
     loop do 
       ping
-      results if count_reached?
+      break if count_reached?
       sleep @delay unless @flood
     end    
+    
+    results
   end
 
   def ping

@@ -83,4 +83,27 @@ describe "Ping" do
       Output.to_s.should match(/OK/)
     end
   end
+  
+  context ".run" do
+    before do
+      @httping = Ping.new
+      @httping.uri = URI.parse("http://www.example.com/")
+      @httping.format = :interactive
+      @httping.count = 5
+    end
+    
+    it "pings until a count is reached" do
+      @httping.flood = true
+      @httping.run
+      Output.to_s.should match(/5 GETs transmitted/)
+    end
+
+    it "adds a delay between each ping if a delay is provided" do
+      @httping.flood = false
+      @httping.delay = 0.25
+      start_time = Time.now
+      @httping.run 
+      (Time.now - start_time).should > 0.5
+    end
+  end
 end
