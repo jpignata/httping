@@ -8,6 +8,13 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.spec_opts = ['--options', 'spec/spec.opts']
 end
 
+Spec::Rake::SpecTask.new(:rcov) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
+  spec.rcov_opts = ['--exclude', 'Library,spec']
+end
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|

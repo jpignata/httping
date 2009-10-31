@@ -12,10 +12,20 @@ describe "Ping" do
     Output.clear
   end
 
-  context ".ping" do
-    it "pings the configured url and outputs statistics" do
-      @httping.ping 
-      Output.to_s.should match(/10 bytes from http:\/\/www.example.com\/: code=200 msg=OK time=[0-9] msecs/)
+  describe ".ping" do
+    context "a HTTP URI" do
+      it "pings the configured url and outputs statistics" do
+        @httping.ping 
+        Output.to_s.should match(/10 bytes from http:\/\/www.example.com\/: code=200 msg=OK time=[0-9] msecs/)
+      end
+    end
+    
+    context "a HTTPS URI" do
+      it "pings the configured url and outputs statistics" do
+        @httping.uri = URI.parse("https://www.example.com/")
+        @httping.ping
+        Output.to_s.should match(/10 bytes from https:\/\/www.example.com\/: code=200 msg=OK time=[0-9] msecs/)
+      end
     end
   end
 
@@ -40,5 +50,29 @@ describe "Ping" do
       @httping.results
       Output.to_s.should match(/-- http:\/\/www.example.com\/ httping.rb statistics ---\n5 GETs transmitted\n/)
     end
-  end  
+  end
+  
+  context ".json_results" do
+    before do
+      @httping.format = :json
+      2.times { @httping.ping }
+    end
+    
+    it "outputs a summary of the pings in JSON format" do
+      @httping.results
+      Output.to_s.should match(/\{\"results\": \{\"max\": [0-9\.]*, \"avg\": [0-9\.]*, \"min\": [0-9\.]*\}, \"sent\": 2, \"uri\": \"http:\/\/www.example.com\/\"\}/)
+    end
+  end
+
+  context ".quick_results" do
+    before do
+      @httping.format = :quick
+      @httping.ping
+    end
+    
+    it "outputs OK if host responds to HTTP GET" do
+      @httping.results
+      Output.to_s.should match(/OK/)
+    end
+  end
 end
