@@ -27,6 +27,14 @@ describe "Ping" do
         Output.to_s.should match(/10 bytes from https:\/\/www.example.com\/: code=200 msg=OK time=[0-9] msecs/)
       end
     end
+
+    context "a URI with a query string" do
+      it "pings the configured url and outputs statistics" do
+        @httping.uri = URI.parse("http://www.example.com/search?q=test")
+        @httping.ping
+        Output.to_s.should match(/10 bytes from http:\/\/www.example.com\/search\?q=test: code=200 msg=OK time=[0-9] msecs/)
+      end
+    end
   end
 
   context ".count_reached?" do

@@ -6,6 +6,7 @@ require 'fakeweb'
 FakeWeb.allow_net_connect = false
 FakeWeb.register_uri(:any, "http://www.example.com", :body => "hey there.")
 FakeWeb.register_uri(:any, "https://www.example.com", :body => "hey there.")
+FakeWeb.register_uri(:any, "http://www.example.com/search?q=test", :body => "hey there.")
 
 class Object
   def exit(status_code = nil)
