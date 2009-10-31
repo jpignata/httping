@@ -16,6 +16,8 @@ class Object
   def puts(output_string = "\n")
     Output.puts(output_string)
   end
+  
+  alias print puts
 end
 
 class Output 

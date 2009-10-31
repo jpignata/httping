@@ -35,6 +35,14 @@ describe "Ping" do
         Output.to_s.should match(/10 bytes from http:\/\/www.example.com\/search\?q=test: code=200 msg=OK time=[0-9] msecs/)
       end
     end
+    
+    context "audible ping" do
+      it "outputs a console beep if audible is sold" do
+        @httping.audible = true
+        @httping.ping
+        Output.to_s.should match(/\007/)
+      end
+    end
   end
 
   context ".count_reached?" do
