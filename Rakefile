@@ -20,8 +20,8 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "httping"
     gem.default_executable = %q{httping}
-    gem.summary = "Measures web site response time"
-    gem.description = "Measures web site response time"
+    gem.summary = "Command-line utility for measuring web site response time"
+    gem.homepage = "http://github.com/jpignata/httping"
     gem.email = "john.pignata@gmail.com"
     gem.authors = ["John Pignata"]
     gem.add_development_dependency "rspec", "1.2.9"

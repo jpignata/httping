@@ -1,7 +1,7 @@
 class Ping
   include Net
 
-  attr_writer :flood, :format, :audible, :user_agent, :referer, :delay, :count, :uri
+  attr_writer :flood, :format, :audible, :user_agent, :referrer, :delay, :count, :uri
 
   def initialize
     @ping_results = []
