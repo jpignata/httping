@@ -1,7 +1,7 @@
 class Ping
   include Net
 
-  attr_writer :flood, :format, :audible, :user_agent, :referrer, :delay, :count, :uri
+  attr_writer :flood, :format, :audible, :user_agent, :referer, :delay, :count, :uri
 
   def initialize
     @ping_results = []
@@ -48,7 +48,7 @@ class Ping
   def http_header
     header = {}
     header['User-Agent'] = @user_agent if @user_agent
-    header['Referrer'] = @referrer if @referrer 
+    header['Referer'] = @referrer if @referrer 
     header   
   end
 
