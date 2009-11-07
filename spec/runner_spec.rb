@@ -10,7 +10,7 @@ describe "Runner" do
     Output.clear
   end
 
-  context ".parse_arguments" do
+  context "#parse_arguments" do
     it "parses command-line arguments into an options hash" do
       ARGV << "http://www.example.com"
       ARGV << "--count" << "3"
@@ -53,7 +53,7 @@ describe "Runner" do
     end
   end
 
-  context ".run" do
+  context "#run" do
     it "returns the params banner if no arguments are passed" do
       @runner.run
       Output.to_s.should == "Usage: httping [options] uri"
@@ -74,7 +74,7 @@ describe "Runner" do
     end
   end
   
-  context "parse_uri" do
+  context "#parse_uri" do
     it "outputs an error and exists if not given an HTTP(S) URI" do
       ARGV << "ftp://www.example.com"
       @runner.parse_uri

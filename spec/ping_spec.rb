@@ -12,7 +12,7 @@ describe "Ping" do
     Output.clear
   end
 
-  describe ".ping" do
+  describe "#ping" do
     context "a HTTP URI" do
       it "pings the configured url and outputs statistics" do
         @httping.ping 
@@ -45,7 +45,7 @@ describe "Ping" do
     end
   end
 
-  context ".count_reached?" do
+  context "#count_reached?" do
     it "returns false if a host has not yet been pinged the number of times requested" do
       2.times { @httping.ping }
       @httping.should_not be_count_reached
@@ -57,7 +57,7 @@ describe "Ping" do
     end
   end
   
-  context ".results" do
+  context "#results" do
     before do
       5.times { @httping.ping }
     end
@@ -68,7 +68,7 @@ describe "Ping" do
     end
   end
   
-  context ".json_results" do
+  context "#json_results" do
     before do
       @httping.format = :json
       2.times { @httping.ping }
@@ -80,7 +80,7 @@ describe "Ping" do
     end
   end
 
-  context ".quick_results" do
+  context "#quick_results" do
     before do
       @httping.format = :quick
       @httping.ping
@@ -92,7 +92,7 @@ describe "Ping" do
     end
   end
   
-  context ".run" do
+  context "#run" do
     before do
       @httping = Ping.new
       @httping.uri = URI.parse("http://www.example.com/")

@@ -5,13 +5,13 @@ describe "Enumerable" do
     @array = [1, 58, 49, 330, 2, 15, 3, 80]
   end
   
-  context ".sum" do
+  context "#sum" do
     it "returns the sum of all members of a set" do
       @array.sum.should be(538)
     end
   end
   
-  context ".mean" do
+  context "#mean" do
     it "returns the mean of a set" do
       @array.mean.should be(67)
     end
@@ -25,7 +25,7 @@ describe "Float" do
     @seconds = 48.31292
   end
   
-  context ".to_human_time" do
+  context "#to_human_time" do
     it "returns a human friendly string of the elapsed time represented by a float" do
       @milliseconds.to_human_time.should == "299 msecs"
       @second.to_human_time.should == "1 sec"
@@ -42,7 +42,7 @@ describe "Fixnum" do
     @gigabytes = 8_289_119_584
   end
   
-  context ".to_human_size" do
+  context "#to_human_size" do
     it "returns a human friendly string of the amount of bytes represented by a number" do
       @bytes.to_human_size.should == "12 bytes"
       @kilobytes.to_human_size.should == "8 kb"
