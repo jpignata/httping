@@ -71,13 +71,14 @@ class Runner
   def parse_uri
     uri = URI.parse(ARGV.first)
 
+    uri.scheme = "http" unless uri.scheme
+    uri.path = "/" unless uri.path.match /^\//
+
     unless ["http", "https"].include?(uri.scheme) 
       puts "ERROR: Invalid URI #{uri}"
       exit
     end
 
-    uri.path = "/" unless uri.path.match /^\//
-    
     uri
   end  
 end

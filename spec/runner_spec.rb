@@ -78,7 +78,7 @@ describe "Runner" do
     it "outputs an error and exists if not given an HTTP(S) URI" do
       ARGV << "ftp://www.example.com"
       @runner.parse_uri
-      Output.to_s.should == "ERROR: Invalid URI ftp://www.example.com"
+      Output.to_s.should == "ERROR: Invalid URI ftp://www.example.com/"
     end
     
     it "accepts HTTP URIs" do
@@ -89,6 +89,12 @@ describe "Runner" do
 
     it "accepts HTTPS URIs" do
       ARGV << "https://www.example.com"
+      @runner.parse_uri
+      Output.to_s.should_not match(/ERROR/)
+    end
+
+    it "assumes HTTP for URIs without a scheme" do
+      ARGV << "www.example.com"
       @runner.parse_uri
       Output.to_s.should_not match(/ERROR/)
     end
