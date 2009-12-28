@@ -50,7 +50,7 @@ Tickets can be submitted by via GitHub issues.
 
 (The MIT License)
 
-Copyright (c) 2009 Jay Pignata
+Copyright (c) 2009-2010 John Pignata
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
