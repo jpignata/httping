@@ -71,7 +71,10 @@ class Runner
   def parse_uri
     uri = URI.parse(ARGV.first)
 
-    uri.scheme = "http" unless uri.scheme
+    if uri.class == URI::Generic
+      uri = URI.parse("http://#{ARGV.first}")
+    end
+    
     uri.path = "/" unless uri.path.match /^\//
 
     unless ["http", "https"].include?(uri.scheme) 
