@@ -48,6 +48,11 @@ class Runner
         opts.on('-r', '--referrer STR', 'Referrer string to send in headers') do |referrer|
           options[:referrer] = referrer
         end
+        opts.on('-v', '--version', 'Display gem version') do
+          version = File.join(File.dirname(__FILE__), "..", "..", "VERSION")
+          system("cat #{version}")
+          exit
+        end
         opts.on('-h', '--help', 'Display this screen') do
           puts opts
           exit
