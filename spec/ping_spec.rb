@@ -64,7 +64,7 @@ describe "Ping" do
     
     it "outputs a summary of the pings" do
       @httping.results
-      Output.to_s.should match(/-- http:\/\/www.example.com\/ httping.rb statistics ---\n5 GETs transmitted\n/)
+      Output.to_s.should match(/-- http:\/\/www.example.com\/ httping statistics ---\n5 GETs transmitted\n/)
     end
   end
   
