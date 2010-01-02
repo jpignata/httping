@@ -68,7 +68,7 @@ class Ping
 
   def interactive_results
     puts
-    puts "--- #{@uri} httping.rb statistics ---"
+    puts "--- #{@uri} httping statistics ---"
     puts "#{@ping_results.size} GETs transmitted"
     puts "round-trip min/avg/max = #{@ping_results.min.to_human_time}/#{@ping_results.mean.to_human_time}/#{@ping_results.max.to_human_time}"
   end
