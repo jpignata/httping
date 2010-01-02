@@ -36,6 +36,8 @@ Tickets can be submitted by via GitHub issues.
         -a, --audible                    Beep on each ping
         -u, --user-agent STR             User agent string to send in headers
         -r, --referrer STR               Referrer string to send in headers
+        -C, --cookie NAME=VALUE          Add cookie to the request
+        -v, --version                    Display gem version
         -h, --help                       Display this screen
 
 ## Installation
@@ -73,6 +75,5 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ## Todo
 
-Ability to pass cookies
-Authentication
-IPv6 support
+* Authentication
+* IPv6 support

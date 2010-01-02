@@ -1,7 +1,8 @@
 class Ping
   include Net
 
-  attr_writer :flood, :format, :audible, :user_agent, :referrer, :delay, :count, :uri
+  attr_writer :flood, :format, :audible, :user_agent
+  attr_writer :referrer, :delay, :count, :uri, :cookies
 
   def initialize
     @ping_results = []
@@ -49,6 +50,7 @@ class Ping
     header = {}
     header['User-Agent'] = @user_agent if @user_agent
     header['Referer'] = @referrer if @referrer 
+    header['Cookies'] = @cookies.map { |k,v| "#{k}=#{v}" }.join('&') if @cookies
     header   
   end
 

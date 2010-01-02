@@ -48,6 +48,12 @@ class Runner
         opts.on('-r', '--referrer STR', 'Referrer string to send in headers') do |referrer|
           options[:referrer] = referrer
         end
+        opts.on('-C', '--cookie NAME=VALUE', 'Add cookie to the request') do |cookie|
+          if cookie.include?('=')
+            options[:cookies] ||= {}
+            options[:cookies].store(*cookie.split('='))
+          end
+        end
         opts.on('-v', '--version', 'Display gem version') do
           version = File.join(File.dirname(__FILE__), "..", "..", "VERSION")
           system("cat #{version}")
